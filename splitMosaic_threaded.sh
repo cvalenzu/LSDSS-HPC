@@ -66,7 +66,22 @@ fi
 # split image
 BIN_PIMCOPY=`get_binary pimcopy`
 
-$BIN_PIMCOPY -i $MOSAIC_IMAGE -o $OUTPUT_DIR
+FILENAME=$(basename $MOSAIC_IMAGE)
+WEIGHTNAME=${MOSAIC_IMAGE//ooi/oow}
+FOLDER_NAME=${FILENAME%.fits.fz}
+NEW_OUTPUT=$OUTPUT_DIR"sextractor_catalogs/"$FOLDER_NAME
+
+mkdir -p $NEW_OUTPUT
+$BIN_PIMCOPY -i $MOSAIC_IMAGE -o $NEW_OUTPUT
+$BIN_PIMCOPY -i $WEIGHTNAME -o $NEW_OUTPUT
+
+FILES=`ls -1 $NEW_OUTPUT | grep image`
+echo $NEW_OUTPUT
+for FILE in ${FILES[@]};
+do
+        srun ./process_ccd.slurm $NEW_OUTPUT $OUTPUT_DIR $FOLDER_NAME $FILE &
+done
+
 EXIT_CODE=$?
 
 if [ $EXIT_CODE -ne 0 ]; then

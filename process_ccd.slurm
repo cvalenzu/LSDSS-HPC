@@ -2,8 +2,8 @@
 #SBATCH -J sub_job
 #SBATCH -n 1
 #SBATCH -p levque
-#SBATCH -o ccd-%j.out
-#SBATCH -e ccd-%j.err
+#SBATCH -o logs/ccd-%j.out
+#SBATCH -e logs/ccd-%j.err
 #SBATCH --reservation=reserva-astro
 
 echo "Running at `hostname -s`"

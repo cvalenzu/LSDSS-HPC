@@ -2,10 +2,10 @@
 #SBATCH -J my_jobstep_array
 #SBATCH -p levque
 #SBATCH -c 8
-#SBATCH -o mosaic-%j.out
-#SBATCH -e mosaic-%j.err
+#SBATCH -o logs/mosaic-%j.out
+#SBATCH -e logs/mosaic-%j.err
 #SBATCH --reservation=reserva-astro
-
+#SBATCH -N 10
 IN_DIR=$1
 OUT_DIR=$2
 
