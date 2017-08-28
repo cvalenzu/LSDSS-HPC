@@ -63,24 +63,38 @@ if ! exist_dir $OUTPUT_DIR; then
     mkdir -p $OUTPUT_DIR
 fi
 
-# split image
 BIN_PIMCOPY=`get_binary pimcopy`
 
 FILENAME=$(basename $MOSAIC_IMAGE)
 WEIGHTNAME=${MOSAIC_IMAGE//ooi/oow}
 FOLDER_NAME=${FILENAME%.fits.fz}
-NEW_OUTPUT=$OUTPUT_DIR"sextractor_catalogs/"$FOLDER_NAME
 
+NEW_OUTPUT=$OUTPUT_DIR"ccds/"$FOLDER_NAME
+
+#Creating results folder
 mkdir -p $NEW_OUTPUT
+
+#Split weight and image mosaics
 $BIN_PIMCOPY -i $MOSAIC_IMAGE -o $NEW_OUTPUT
 $BIN_PIMCOPY -i $WEIGHTNAME -o $NEW_OUTPUT
 
+#For each ccd create a job to process using 
+#sextractor
 FILES=`ls -1 $NEW_OUTPUT | grep image`
 echo $NEW_OUTPUT
 for FILE in ${FILES[@]};
 do
         srun ./process_ccd.slurm $NEW_OUTPUT $OUTPUT_DIR $FOLDER_NAME $FILE &
 done
+wait
+
+#Run scamp to all the fits files
+
+
+#For each calibrated catalog create a job to send the data
+#to the database
+
+
 
 EXIT_CODE=$?
 
