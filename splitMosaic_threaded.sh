@@ -78,24 +78,6 @@ mkdir -p $NEW_OUTPUT
 $BIN_PIMCOPY -i $MOSAIC_IMAGE -o $NEW_OUTPUT
 $BIN_PIMCOPY -i $WEIGHTNAME -o $NEW_OUTPUT
 
-#For each ccd create a job to process using 
-#sextractor
-FILES=`ls -1 $NEW_OUTPUT | grep image`
-echo $NEW_OUTPUT
-for FILE in ${FILES[@]};
-do
-        srun ./process_ccd.slurm $NEW_OUTPUT $OUTPUT_DIR $FOLDER_NAME $FILE &
-done
-wait
-
-#Run scamp to all the fits files
-
-
-#For each calibrated catalog create a job to send the data
-#to the database
-
-
-
 EXIT_CODE=$?
 
 if [ $EXIT_CODE -ne 0 ]; then
